@@ -216,12 +216,12 @@ declare -A EXTRA_DATASETS=(
     [$INST_NAME/omit/home/jq]=""
     # As a child of a user's dataset, to inherit quota, encryption, etc.
     [$INST_NAME/home/work/omit]="-o mountpoint=/mnt/omit/home/work"
-
+    # https://jrs-s.net/2018/08/17/zfs-tuning-cheat-sheet/
     # Used for storing already compressed dwarfs images ( primarily for games )
     [dwarfs]="-o mountpoint=/mnt/dwarfs -o compression=off \
        -o atime=off -o devices=off -o exec=off -o setuid=off \
        -o primarycache=metadata -o secondarycache=metadata \
-       -o dedup=off -o recordsize=64K"
+       -o dedup=off -o recordsize=1M"
 
     # Only used for VM drive images which can either be files which get
     # compressed or zvols which do not.
