@@ -26,7 +26,7 @@ esac
 # Definitions
 
 # The host name of this installation.
-INST_NAME=yoyo
+INST_NAME=uni
 # A reasonably-globally-unique random identifier suffix for the ZFS pool names.
 # Useful because pool names must be unique when imported, and this allows
 # importing multiple pools that have the same "boot" or "main" prefix.
@@ -40,8 +40,8 @@ done
 [ ${#INST_ID} == 6 ]
 
 DRIVES=(
-    /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_2TB_S59CNM0R706239E
-    /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_2TB_S59CNM0R706236Y
+    /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S4EWNMFN904595F
+    /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_1TB_S5H9NS0R202337Z
 )
 VDEV=mirror
 
@@ -86,7 +86,7 @@ declare -A PARTITION_SIZE=(
            [EFI]=1
           [boot]=8
          #[main]=remaining
-          [swap]=64
+          [swap]=16
     [other-boot]=2
     [other-main]=20
 )
@@ -141,8 +141,8 @@ POOL_PROPS_COMMON=(
 )
 
 # In GiB
-TMP_DATASET_SIZE=256
-VM_ZVOL_SIZE=64
+TMP_DATASET_SIZE=64
+VM_ZVOL_SIZE=16
 
 # These are ordered so that parents are created first, as required.  Those with
 # canmount=off exist only to support being able to inherit properties for all
@@ -151,6 +151,8 @@ VM_ZVOL_SIZE=64
 MAIN_DATASETS_ORDER=(
     $INST_NAME
     $INST_NAME/home
+    $INST_NAME/home/jq
+    $INST_NAME/home/work
     $INST_NAME/nix
     $INST_NAME/srv
     $INST_NAME/state
@@ -168,6 +170,8 @@ MAIN_DATASETS_ORDER=(
 declare -A MAIN_DATASETS=(
     [$INST_NAME]="          -o mountpoint=/"
     [$INST_NAME/home]="     -o devices=off -o setuid=off"
+    [$INST_NAME/home/jq]=""
+    [$INST_NAME/home/work]="-o quota=64G"
     # Disable atime for faster accesses to the Nix files
     [$INST_NAME/nix]="      -o atime=off"
     [$INST_NAME/srv]=""
@@ -193,15 +197,32 @@ declare -A BOOT_DATASETS=(
 )
 
 EXTRA_DATASETS_ORDER=(
+    old-misc
     $INST_NAME/omit
     $INST_NAME/omit/home
+    $INST_NAME/omit/home/jq
+    $INST_NAME/omit/work/omit
+    dwarfs
     VMs
     VMs/blkdev
 )
 declare -A EXTRA_DATASETS=(
+    [old-misc]="-o  mountpoint=/mnt/old-misc -o readonly=on -o compression=zstd\
+                -o devices=off -o exec=off -o setuid=off"
     # Only used for things that users want to omit from backups.
     [$INST_NAME/omit]="     -o canmount=off -o mountpoint=/mnt/omit"
     [$INST_NAME/omit/home]="${MAIN_DATASETS[$INST_NAME/home]}"
+    # Basic.
+    [$INST_NAME/omit/home/jq]=""
+    # As a child of a user's dataset, to inherit quota, encryption, etc.
+    [$INST_NAME/home/work/omit]="-o mountpoint=/mnt/omit/home/work"
+
+    # Used for storing already compressed dwarfs images ( primarily for games )
+    [dwarfs]="-o mountpoint=/mnt/dwarfs -o compression=off \
+       -o atime=off -o devices=off -o exec=off -o setuid=off \
+       -o primarycache=metadata -o secondarycache=metadata \
+       -o dedup=off -o recordsize=64K"
+
     # Only used for VM drive images which can either be files which get
     # compressed or zvols which do not.
     [VMs]="-o mountpoint=/mnt/VMs -o compression=zstd \
@@ -209,7 +230,7 @@ declare -A EXTRA_DATASETS=(
            -o primarycache=metadata -o secondarycache=metadata"
     [VMs/blkdev]="-o canmount=off -o compression=off"
 )
-for I in {1..8}; do
+for I in {1..4}; do
     EXTRA_DATASETS_ORDER+=(VMs/blkdev/$I)
     EXTRA_DATASETS[VMs/blkdev/$I]="-V ${VM_ZVOL_SIZE}G -s -b $((2 ** ZPOOL_ASHIFT))"
 done
