@@ -202,6 +202,7 @@ EXTRA_DATASETS_ORDER=(
     $INST_NAME/omit/home
     $INST_NAME/omit/home/jq
     $INST_NAME/omit/work/omit
+    dwarfs
     VMs
     VMs/blkdev
 )
@@ -212,9 +213,15 @@ declare -A EXTRA_DATASETS=(
     [$INST_NAME/omit]="     -o canmount=off -o mountpoint=/mnt/omit"
     [$INST_NAME/omit/home]="${MAIN_DATASETS[$INST_NAME/home]}"
     # Basic.
-    [$INST_NAME/omit/home/me]=""
+    [$INST_NAME/omit/home/jq]=""
     # As a child of a user's dataset, to inherit quota, encryption, etc.
     [$INST_NAME/home/work/omit]="-o mountpoint=/mnt/omit/home/work"
+
+    # Used for storing already compressed dwarfs images ( primarily for games )
+    [dwarfs]="-o mountpoint=/mnt/dwarfs -o compression=off \
+       -o atime=off -o devices=off -o exec=off -o setuid=off \
+       -o primarycache=metadata -o secondarycache=metadata \
+       -o dedup=off -o recordsize=64K"
 
     # Only used for VM drive images which can either be files which get
     # compressed or zvols which do not.

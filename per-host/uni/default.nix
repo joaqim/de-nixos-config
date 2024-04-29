@@ -44,8 +44,8 @@ in
     usersZvolsForVMs = [
       { id = "1"; owner = "boss"; }
       { id = "2"; owner = "boss"; }
-      { id = "3"; owner = "z"; }
-      { id = "4"; owner = "z"; }
+      { id = "3"; owner = "work"; }
+      { id = "4"; owner = "work"; }
       # { id = "5"; owner = ; }
       # { id = "6"; owner = ; }
       # { id = "7"; owner = ; }
@@ -95,9 +95,6 @@ in
 
   my.zfs.encryptedHomes = {
     noAuto = [
-      "/home/v"
-      "/home/v/old"
-      { mountPoint = "/mnt/omit/home/v"; subDataset = "/home/v/omit"; }
     ];
   };
 

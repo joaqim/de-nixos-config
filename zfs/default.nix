@@ -271,11 +271,9 @@ in
 
           (zfsPerHostMountSpecs pools.main ([
              { mountPoint = "/"; }
-             { mountPoint = "/mnt/archive";             subDataset = "/archive"; }
-             { mountPoint = "/mnt/records";             subDataset = "/records"; }
              { mountPoint = "/mnt/omit/home";           subDataset = "/omit/home"; }
-             { mountPoint = "/mnt/omit/home/d";         subDataset = "/omit/home/d"; }
-             { mountPoint = "/mnt/omit/home/z";         subDataset = "/omit/home/z"; }
+             { mountPoint = "/mnt/omit/home/jq";        subDataset = "/omit/home/jq"; }
+             { mountPoint = "/mnt/omit/home/work";      subDataset = "/omit/home/work"; }
            ]
            ++ (map (mkMountSpec {}) [
                    "/home"
@@ -290,15 +288,16 @@ in
                    "/var/local"
                    "/var/log"
                    "/var/tmp"
-                   "/home/d"
-                   "/home/z"
-                   "/home/z/zone"
+                   "/home/jq"
+                   "/home/work"
               ])
            ++ (map (mkMountSpec { options = ["noauto"]; }) ([
               ] ++ encryptedHomes.noAuto))
           ))
 
           (zfsMountSpecs pools.main [
+            { mountPoint = "/mnt/old-misc"; subDataset = "/old-misc"; }
+            { mountPoint = "/mnt/dwarfs"; subDataset = "/dwarfs"; }
             { mountPoint = "/mnt/VMs"; subDataset = "/VMs"; }
           ])
 

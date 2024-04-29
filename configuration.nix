@@ -75,18 +75,10 @@ in
       boss = common // {
         extraGroups = [ "wheel" "networkmanager" "wireshark" ];
       };
-      d = common // {
-        extraGroups = [ "audio" "scanner" "lp" ];
+      jq = common // {
+        extraGroups = [ "audio" ];
       };
-      z = common;
-      banking = common;
-      bills = common // {
-        extraGroups = [ "bills" ];
-      };
-    };
-
-    users.groups = {
-      bills = {};
+      work = common;
     };
 
     # For each normal user, give it its own sub-directories under /mnt/omit/home/ and
@@ -139,12 +131,13 @@ in
         autorun = true;
 
         # Configure keymap in X11
-        layout = "us";
-        xkbOptions = "ctrl:nocaps";
+        layout = "us,se";
+        xkbVariant = "dvp,";
+        xkbOptions = "caps:nocaps,grp:win_space_toggle";
 
         # Enable touchpad support (enabled default in most desktopManager).
-        libinput.enable = true;
-        libinput.touchpad.tapping = false;
+        #libinput.enable = true;
+        #libinput.touchpad.tapping = false;
 
         desktopManager.mate.enable = true;
 
