@@ -37,7 +37,7 @@ in
       main       = 4;
       swap       = 5;
     };
-    pools = let id = "w7ew3y"; in {
+    pools = let id = "k3gvze"; in {
       boot.name = "boot-${id}";
       main.name = "main-${id}";
     };
@@ -157,7 +157,6 @@ in
   time.timeZone = "Europe/Stockholm";
 
   console.font = "ter-v24n";
-  console.keyMap = "dvorak";
 
   hardware.cpu.amd.updateMicrocode = true;
 
