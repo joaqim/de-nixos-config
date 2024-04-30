@@ -130,11 +130,12 @@ in
       logRefusedConnections = true;
       logRefusedPackets = true;
 
-      # Note that this is not needed when services.openssh.enable=true because that opens 22 itself.
-      # allowedTCPPorts = [ 22 ];
-      # allowedUDPPorts = [ ... ];
+      # Allow Minecraft server port
+      allowedTCPPorts = [ 25565 ];
     };
   };
+
+  my.intended.netPorts.TCP = [ 25565 ];
 
   # This only reflects the DNS servers that are configured elsewhere (e.g. by DHCP).
   # This does not define the DNS servers.
@@ -178,14 +179,14 @@ in
   # nor the somewhat-faster latency of "schedutil").  Note: maximum performance is attained with
   # the fans' speeds at the highest, which I have a different profile for in Tuxedo-rs's Tailor
   # that I switch between as desired.
-  powerManagement.cpuFreqGovernor = "conservative";
+  powerManagement.cpuFreqGovernor = "ondemand"; # TODO(jq): Test which profile I would prefer 
 
   services.xserver = {
     exportConfiguration = true;
 
     xrandrHeads = [
       {
-        # (The kernel names this same monitor HDMI-A-1.)
+        # (The kernel names this same monitor DP-3.)
         output = "DP-3";
         primary = true;
         # This DisplaySize corresponds to my current external monitor which is a Philips 346B.
@@ -202,7 +203,7 @@ in
         # users or switching virtual consoles (in conjunction with the video
         # argument in kernelParams above).
         + (optionalString (elem "video=DP-1:3440x1440@100" config.boot.kernelParams) ''
-          Modeline "3440x1440@100.0"  543.50  3440 3488 3552 3600  1440 1443 1453 1510 -hsync +vsync
+          Modeline "3440x1440@100.0"  728.00  3440 3728 4104 4768  1440 1443 1453 1527 -hsync +vsync
           Option "PreferredMode" "3440x1440@100.0"
         '');
       }
@@ -256,7 +257,7 @@ in
   nix = {
     daemonCPUSchedPolicy = "idle"; daemonIOSchedClass = "idle";  # So builds defer to my tasks.
     settings = {
-      extra-experimental-features = "nix-command";
+      extra-experimental-features = "nix-command flakes";
     };
   };
 
