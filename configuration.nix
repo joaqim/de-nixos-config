@@ -286,6 +286,7 @@ in
         htop
         lsof
       # git  # Installed via above programs.git.enable
+        vim
         unzip
         gnupg
         ripgrep
