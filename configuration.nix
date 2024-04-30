@@ -17,6 +17,7 @@ in
     (./per-host + "/${hostName}")
     ./debugging.nix
     ./zfs
+    ./zram.nix
     ./networking
     ./secret-service.nix
     ./rootless-docker.nix
