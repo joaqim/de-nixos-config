@@ -293,7 +293,14 @@ intended for rarely setting-up a new personal system only every few years or so
          step 3.1).
       2. Change `users.users` elements to have the users you want, including
          those from your choice in step 3.6 (if any).
-      3. Change `system.stateVersion` to the NixOS release that you are installing.
+      3. Change `system.stateVersion` to the NixOS release that you are installing.  This must be
+         the same as the NixOS version of the Installer that you chose in step 0, which is
+         probably different than the version in my file (which was from when I installed in the
+         past) and will probably be different than the example in the diff below (which was from
+         when I wrote this).  E.g. if you are reading this within 6 months after 2099-06 then you
+         probably chose NixOS release version `99.05` and so should change it to that, but if for
+         some reason you chose an old, or an unstable future, version then change it to that
+         instead.
       4. Optional: Change anything else you want to be different from my
          choices.  (See the [NixOS documentation](https://nixos.org/learn.html),
          especially [Part
@@ -340,7 +347,7 @@ intended for rarely setting-up a new personal system only every few years or so
    ```diff
    --- a/configuration.nix
    +++ b/configuration.nix
-   @@ -8,7 +8,7 @@ in
+   @@ -9,7 +9,7 @@ in
 
     let
       # Choose for the particular host machine.
@@ -349,19 +356,29 @@ intended for rarely setting-up a new personal system only every few years or so
     in
     {
       imports = [
-   @@ -50,10 +50,10 @@ in
+   @@ -76,10 +76,10 @@ in
           boss = common // {
-            extraGroups = [ "wheel" "networkmanager" ];
+            extraGroups = [ "wheel" "networkmanager" "wireshark" ];
           };
    -      d = common // {
    +      me = common // {
-            extraGroups = [ "audio" ];
+            extraGroups = [ "audio" "scanner" "lp" ];
           };
    -      z = common;
    +      work = common;
           banking = common;
-          bills = common;
-        };
+          bills = common // {
+            extraGroups = [ "bills" ];
+   @@ -368,6 +368,6 @@ in
+        # this value at the release version of the first install of this system.
+        # Before changing this value read the documentation for this option
+        # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+   -    system.stateVersion = "21.05"; # Did you read the comment?
+   +    system.stateVersion = "23.11"; # Did you read the comment?
+      };
+    }
+   ```
+   ```diff
    --- a/zfs/default.nix
    +++ b/zfs/default.nix
    @@ -257,9 +257,9 @@ in
@@ -394,6 +411,8 @@ intended for rarely setting-up a new personal system only every few years or so
    +            { mountPoint = "/mnt/old-misc"; subDataset = "/old-misc"; }
                 { mountPoint = "/mnt/VMs"; subDataset = "/VMs"; }
               ])
+   ```
+   ```diff
    --- a/per-host/yoyo/default.nix
    +++ b/per-host/tester/default.nix
    @@ -31,12 +31,12 @@ in
@@ -614,7 +633,18 @@ intended for rarely setting-up a new personal system only every few years or so
        ```shell
        sudo $EDITOR home.nix
        ```
-       1. Change `home.stateVersion` to the NixOS release that you are installing.
+       1. Change `home.stateVersion` to the NixOS release that you are installing.  See step 5.1.3
+          for further comments about this.  E.g.:
+          ```diff
+          --- a/.config/home-manager/home.nix
+          +++ b/.config/home-manager/home.nix
+          @@ -96,5 +96,5 @@ in
+             # You can update Home Manager without changing this value. See
+             # the Home Manager release notes for a list of state version
+             # changes in each release.
+          -  home.stateVersion = "21.05";
+          +  home.stateVersion = "23.11";
+          ```
 
     1. Rename to your new host name:
        ```shell
