@@ -201,7 +201,7 @@ EXTRA_DATASETS_ORDER=(
     $INST_NAME/omit
     $INST_NAME/omit/home
     $INST_NAME/omit/home/jq
-    $INST_NAME/omit/work/omit
+    $INST_NAME/omit/home/work
     dwarfs
     VMs
     VMs/blkdev
@@ -215,7 +215,7 @@ declare -A EXTRA_DATASETS=(
     # Basic.
     [$INST_NAME/omit/home/jq]=""
     # As a child of a user's dataset, to inherit quota, encryption, etc.
-    [$INST_NAME/home/work/omit]="-o mountpoint=/mnt/omit/home/work"
+    [$INST_NAME/omit/home/work]="-o mountpoint=/mnt/omit/home/work"
     # https://jrs-s.net/2018/08/17/zfs-tuning-cheat-sheet/
     # Used for storing already compressed dwarfs images ( primarily for games )
     [dwarfs]="-o mountpoint=/mnt/dwarfs -o compression=off \

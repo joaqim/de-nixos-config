@@ -9,7 +9,7 @@ in
 
 let
   # Choose for the particular host machine.
-  hostName = "yoyo";
+  hostName = "uni";
 in
 {
   imports = [
@@ -76,7 +76,7 @@ in
         extraGroups = [ "wheel" "networkmanager" "wireshark" ];
       };
       jq = common // {
-        extraGroups = [ "audio" ];
+        extraGroups = [ "audio" "wheel" "networkmanager" "wireshark" ];
       };
       work = common;
     };
@@ -285,6 +285,7 @@ in
         htop
         lsof
       # git  # Installed via above programs.git.enable
+        vim
         unzip
         gnupg
         ripgrep
@@ -318,7 +319,7 @@ in
 
       variables = rec {
         # Use absolute paths for these, in case some usage does not use PATH.
-        VISUAL = "${pkgs.nano}/bin/nano";  # (Note: My users usually change this to Emacs.)
+        VISUAL = "${pkgs.nano}/bin/vim";  # (Note: My users usually change this to Emacs.)
         EDITOR = VISUAL;
         PAGER = "${pkgs.most}/bin/most";
         # Prevent Git from using SSH_ASKPASS (which NixOS always sets).  This is

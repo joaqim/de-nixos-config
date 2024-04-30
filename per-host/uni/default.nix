@@ -157,7 +157,6 @@ in
   time.timeZone = "Europe/Stockholm";
 
   console.font = "ter-v24n";
-  console.keyMap = "dvorak";
 
   hardware.cpu.amd.updateMicrocode = true;
 
