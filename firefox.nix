@@ -68,8 +68,8 @@ in
           ];
           Default = "SearXNG";
         };
-        earchSuggestEnabled = false;
-		    ShowHomeButton = true
+        SearchSuggestEnabled = false;
+	      ShowHomeButton = true;
         EnableTrackingProtection = {
           Value = true;
           Locked = true;
@@ -90,7 +90,7 @@ in
           Enabled = true;
           Locked = true;
         };
-        ExtensionUpdate = false
+        ExtensionUpdate = false;
 
         FirefoxHome = {
           Search = true;
@@ -232,7 +232,7 @@ in
             .tab:not(:hover) .closebox {
               display: none;
             }
-          ''
+          '';
         };
       };
   }

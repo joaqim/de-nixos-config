@@ -134,7 +134,7 @@ in
         # Configure keymap in X11
         layout = "us,se";
         xkbVariant = "dvp,";
-        xkbOptions = "caps:nocaps,grp:win_space_toggle";
+        xkbOptions = "caps:swapescape,grp:win_space_toggle";
 
         # Enable touchpad support (enabled default in most desktopManager).
         #libinput.enable = true;
@@ -286,7 +286,7 @@ in
         wget
         htop
         lsof
-      # git  # Installed via above programs.git.enable
+        # git  # Installed via above programs.git.enable
         vim
         unzip
         gnupg
@@ -321,7 +321,7 @@ in
 
       variables = rec {
         # Use absolute paths for these, in case some usage does not use PATH.
-        VISUAL = "${pkgs.nano}/bin/vim";  # (Note: My users usually change this to Emacs.)
+        VISUAL = "${pkgs.vim}/bin/vim";  # (Note: My users usually change this to Emacs.)
         EDITOR = VISUAL;
         PAGER = "${pkgs.most}/bin/most";
         # Prevent Git from using SSH_ASKPASS (which NixOS always sets).  This is
