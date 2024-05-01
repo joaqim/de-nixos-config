@@ -1,7 +1,9 @@
 self: super:
 
 let
-  inherit (super) firefox;
+
+  inherit (super) firefox lib;
+  inherit (lib) mkForce;
   inherit (self) keepassxc /*fetchFirefoxAddon*/;
 in
   firefox.override {
@@ -90,7 +92,6 @@ in
           Enabled = true;
           Locked = true;
         };
-        ExtensionUpdate = false;
 
         FirefoxHome = {
           Search = true;
@@ -141,7 +142,7 @@ in
           "browser.newtabpage.activity-stream.system.showSponsored" = lock-false;
           "browser.newtabpage.activity-stream.showSponsoredTopSites" = lock-false;
           # Needed for Firefox to apply the userChrome.css and userContent.css
-          # files (which are defined in 'Default' profile.)
+          # files (which are defined in 'default' profile.)
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
       };
     };
@@ -168,71 +169,5 @@ in
     nativeMessagingHosts = [
       keepassxc  # Allow the KeePassXC-Browser extension to communicate, when a user installed it.
     ];
-    # Switch profiles via about:profiles page.
-      # For options that are available in Home-Manager see
-      # https://nix-community.github.io/home-manager/options.html#opt-programs.firefox.profiles
-      profiles ={
-        Default = {           # choose a profile name; directory is /home/<user>/.mozilla/firefox/Default
-          name = "Default";     # name as listed in about:profiles
-          id = 0;               # 0 is the default profile; see also option "isDefault"
-          isDefault = true;     # can be omitted; true if profile ID is 0
-          settings = {          # specify profile-specific preferences here; check about:config for options
-            "browser.newtabpage.activity-stream.feeds.section.highlights" = false;
-            "browser.startup.homepage" = "https://nixos.org";
-            "browser.newtabpage.pinned" = [{
-              title = "NixOS";
-              url = "https://nixos.org";
-            }];
 
-            # Enable letterboxing
-            #"privacy.resistFingerprinting" = true;
-            "privacy.resistFingerprinting.letterboxing" = true;
-
-            # WebGL TODO(jq): Loss in performance(?) to prevent hardware tracking
-            "webgl.disabled" = true;
-
-            "browser.preferences.defaultPerformanceSettings.enabled" = false;
-            "layers.acceleration.disabled" = true;
-            "privacy.globalprivacycontrol.enabled" = true;
-
-            "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
-
-            # "network.trr.mode" = 3;
-
-            # "network.dns.disableIPv6" = false;
-
-            "privacy.donottrackheader.enabled" = true;
-
-            # "privacy.clearOnShutdown.history" = true;
-            # "privacy.clearOnShutdown.downloads" = true;
-            # "browser.sessionstore.resume_from_crash" = true;
-
-            # See https://librewolf.net/docs/faq/#how-do-i-fully-prevent-autoplay for options
-            "media.autoplay.blocking_policy" = 2;
-
-
-            "signon.management.page.breach-alerts.enabled" = false; # Disable firefox password checking against a breach database
-            "network.proxy.socks_remote_dns" = true; # Do DNS lookup through proxy (required for tor to work)
-          };
-
-          # Needed with the Tree Style Tab extension, to hide undesired widgets.
-          userChrome = ''
-            #TabsToolbar {
-                visibility: collapse !important;
-            }
-
-            #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
-                display: none;
-            }
-          '';
-
-          # Darker background for new tabs (to not blast eyes with blinding
-          # white).
-          userContent = ''
-            .tab:not(:hover) .closebox {
-              display: none;
-            }
-          '';
-        };
-      };
   }
