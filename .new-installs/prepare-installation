@@ -26,7 +26,7 @@ esac
 # Definitions
 
 # The host name of this installation.
-INST_NAME=uni
+INST_NAME=can
 # A reasonably-globally-unique random identifier suffix for the ZFS pool names.
 # Useful because pool names must be unique when imported, and this allows
 # importing multiple pools that have the same "boot" or "main" prefix.
@@ -40,10 +40,9 @@ done
 [ ${#INST_ID} == 6 ]
 
 DRIVES=(
-    /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_Plus_1TB_S4EWNMFN904595F
-    /dev/disk/by-id/nvme-Samsung_SSD_970_EVO_1TB_S5H9NS0R202337Z
+    /dev/disk/by-id/nvme-E2M2_64GB_MJU412D001CC9
 )
-VDEV=mirror
+VDEV=null
 
 declare -A PARTITION_TYPE_CODE=(
     # sgdisk will not accept 00000000-0000-0000-0000-000000000000 (nor 0, etc),
@@ -141,8 +140,8 @@ POOL_PROPS_COMMON=(
 )
 
 # In GiB
-TMP_DATASET_SIZE=64
-VM_ZVOL_SIZE=16
+TMP_DATASET_SIZE=4
+VM_ZVOL_SIZE=4
 
 # These are ordered so that parents are created first, as required.  Those with
 # canmount=off exist only to support being able to inherit properties for all
